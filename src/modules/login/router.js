@@ -4,6 +4,7 @@ const router = new Router({
 });
 
 router.post("/", (ctx, next) => {
+    console.log(ctx.request.body);
     ctx.body = "Hello World";
 });
 
