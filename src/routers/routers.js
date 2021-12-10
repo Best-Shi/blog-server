@@ -5,11 +5,11 @@ const cwd = process.cwd();
 
 const dirList = fs.readdirSync(path.resolve(cwd, "./src/modules"));
 
-function router(app) {
+function router() {
     dirList.forEach((dir) => {
         const model = require(path.resolve(cwd, `./src/modules/${dir}/router`));
-        app.use(model.routes());
-        app.use(model.allowedMethods());
+        this.use(model.routes());
+        this.use(model.allowedMethods());
     });
 }
 
