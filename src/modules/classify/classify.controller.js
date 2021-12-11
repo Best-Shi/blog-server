@@ -1,4 +1,4 @@
-const { getClassifyList, classifyCount, createClassify, update } = require("./classify.service");
+const { getClassifyList, classifyCount, createClassify, update, delClassify } = require("./classify.service");
 const responseDataHandle = require("../../utils/response.data.handle");
 
 class ClassifyController {
@@ -34,6 +34,16 @@ class ClassifyController {
             ctx.body = responseDataHandle("UPDATE_SUCCESS");
         } catch (err) {
             ctx.app.emit("error", "UPDATE_FAIL", ctx);
+        }
+    }
+    // 删除分类
+    async del(ctx, next) {
+        const { id } = ctx.request.body;
+        try {
+            await delClassify(id);
+            ctx.body = responseDataHandle("DEL_SUCCESS");
+        } catch (err) {
+            ctx.app.emit("error", "DEL_FAIL", ctx);
         }
     }
 }

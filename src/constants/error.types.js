@@ -55,6 +55,10 @@ const errorTypes = {
         code: 400,
         message: "分类不存在",
     },
+    DEL_FAIL: {
+        code: 400,
+        message: "删除失败",
+    },
 };
 
 module.exports = errorTypes;

@@ -23,6 +23,10 @@ const okTypes = {
         code: 200,
         message: "更新成功",
     },
+    DEL_SUCCESS: {
+        code: 200,
+        message: "删除成功",
+    },
 };
 
 module.exports = okTypes;

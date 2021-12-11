@@ -37,8 +37,13 @@ class ClassIfyService {
     }
     // 编辑分类
     async update(id, title, direction) {
-        const statement = "UPDATE bs_classify SET ? WHERE id=?;";
+        const statement = "UPDATE bs_classify SET ? WHERE id = ?;";
         await connection.query(statement, [{ title, direction }, id]);
+    }
+    // 删除分类
+    async delClassify(id) {
+        const statement = "DELETE FROM bs_classify WHERE id = ?;";
+        await connection.execute(statement, [id]);
     }
 }
 
