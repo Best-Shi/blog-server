@@ -11,6 +11,10 @@ const okTypes = {
         code: 200,
         message: "用户信息修改成功",
     },
+    REQUEST_SUCCESS: {
+        code: 200,
+        message: "请求成功",
+    },
 };
 
 module.exports = okTypes;

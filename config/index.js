@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const PRIVATE_KEY = fs.readFileSync(path.resolve(__dirname, "./rsa_private_key.pem"));
+const PRIVATE_KEY = fs.readFileSync(path.resolve(__dirname, "rsa_private_key.pem"));
 const PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, "rsa_public_key.pem"));
 
 module.exports = { APP_PORT, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD } = process.env;
