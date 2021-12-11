@@ -1,10 +1,12 @@
 const Router = require("@koa/router");
+const { verifyLogin } = require("./user.verify");
+
 const router = new Router({
     prefix: "/user",
 });
 
-const { create } = require("./user.controller");
+const { login } = require("./user.controller");
 
-router.post("/create", create);
+router.post("/login", verifyLogin, login);
 
 module.exports = router;
