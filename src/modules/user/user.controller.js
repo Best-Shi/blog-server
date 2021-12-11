@@ -34,8 +34,8 @@ class UserController {
     // 修改用户密码
     async editPassword(ctx, next) {
         const { id, password } = ctx.request.body;
-        await updateUserPassword(id, sha256Password(password));
         try {
+            await updateUserPassword(id, sha256Password(password));
             ctx.body = responseDataHandle("PASSWORD_EDIT_SUCCESS", { id });
         } catch (error) {
             ctx.app.emit("error", "PASSWORD_EDIT_FAIL", ctx);
