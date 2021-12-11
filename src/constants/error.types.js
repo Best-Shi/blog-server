@@ -43,6 +43,14 @@ const errorTypes = {
         code: 400,
         message: "用户信息更新失败",
     },
+    CREATE_FAIL: {
+        code: 400,
+        message: "创建失败",
+    },
+    UPDATE_FAIL: {
+        code: 400,
+        message: "更新失败",
+    },
 };
 
 module.exports = errorTypes;

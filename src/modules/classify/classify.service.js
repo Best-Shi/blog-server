@@ -23,6 +23,11 @@ class ClassIfyService {
 
         return result[0];
     }
+    // 创建分类
+    async createClassify(uid, title, direction) {
+        const statement = "INSERT INTO bs_classify (title,direction,uid) VALUES(?,?,?);";
+        connection.execute(statement, [title, direction, uid]);
+    }
 }
 
 module.exports = new ClassIfyService();

@@ -15,6 +15,14 @@ const okTypes = {
         code: 200,
         message: "请求成功",
     },
+    CREATE_SUCCESS: {
+        code: 200,
+        message: "创建成功",
+    },
+    UPDATE_SUCCESS: {
+        code: 200,
+        message: "更新成功",
+    },
 };
 
 module.exports = okTypes;

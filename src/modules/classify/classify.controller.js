@@ -1,4 +1,4 @@
-const { getClassifyList, classifyCount } = require("./classify.service");
+const { getClassifyList, classifyCount, createClassify } = require("./classify.service");
 const responseDataHandle = require("../../utils/response.data.handle");
 
 class ClassifyController {
@@ -16,6 +16,16 @@ class ClassifyController {
         ctx.body = responseDataHandle("REQUEST_SUCCESS", { list, currentpage, pagesize, count });
     }
     // 创建文章分类
+    async create(ctx, next) {
+        const uid = ctx.user.id;
+        const { title, direction } = ctx.request.body;
+        try {
+            await createClassify(uid, title, direction);
+            ctx.body = responseDataHandle("CREATE_SUCCESS");
+        } catch (err) {
+            ctx.app.emit("error", "CREATE_FAIL", ctx);
+        }
+    }
 }
 
 module.exports = new ClassifyController();
