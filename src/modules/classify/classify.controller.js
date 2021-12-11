@@ -1,4 +1,4 @@
-const { getClassifyList, classifyCount, createClassify } = require("./classify.service");
+const { getClassifyList, classifyCount, createClassify, update } = require("./classify.service");
 const responseDataHandle = require("../../utils/response.data.handle");
 
 class ClassifyController {
@@ -24,6 +24,16 @@ class ClassifyController {
             ctx.body = responseDataHandle("CREATE_SUCCESS");
         } catch (err) {
             ctx.app.emit("error", "CREATE_FAIL", ctx);
+        }
+    }
+    // 编辑文章分类
+    async edit(ctx, next) {
+        const { id, title, direction } = ctx.request.body;
+        try {
+            await update(id, title, direction);
+            ctx.body = responseDataHandle("UPDATE_SUCCESS");
+        } catch (err) {
+            ctx.app.emit("error", "UPDATE_FAIL", ctx);
         }
     }
 }

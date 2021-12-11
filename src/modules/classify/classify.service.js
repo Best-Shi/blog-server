@@ -9,6 +9,13 @@ class ClassIfyService {
         return count;
     }
 
+    // 通过 id 获取数据
+    async getClassifyById(id) {
+        const statement = "SELECT * FROM bs_classify WHERE id = ?;";
+        const result = await connection.execute(statement, [id]);
+        return result[0][0];
+    }
+
     // 获取列表
     async getClassifyList(uid, current, size, filterText) {
         let statement = "";
@@ -27,6 +34,11 @@ class ClassIfyService {
     async createClassify(uid, title, direction) {
         const statement = "INSERT INTO bs_classify (title,direction,uid) VALUES(?,?,?);";
         connection.execute(statement, [title, direction, uid]);
+    }
+    // 编辑分类
+    async update(id, title, direction) {
+        const statement = "UPDATE bs_classify SET ? WHERE id=?;";
+        await connection.query(statement, [{ title, direction }, id]);
     }
 }
 

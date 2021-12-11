@@ -51,6 +51,10 @@ const errorTypes = {
         code: 400,
         message: "更新失败",
     },
+    CLASSIFY_DOES_NOT_EXISTS: {
+        code: 400,
+        message: "分类不存在",
+    },
 };
 
 module.exports = errorTypes;
