@@ -25,15 +25,15 @@ const verifyLogin = async (ctx, next) => {
 };
 
 const verifyEdit = async (ctx, next) => {
-    const { id, username, password, ...data } = ctx.request.body;
+    const { id, username } = ctx.request.body;
 
     // 判断有没有id
     if (!id) {
         return ctx.app.emit("error", "ID_IS_REQUIRED", ctx);
     } else {
-        // if (id !== ctx.user.id) {
-        //     return ctx.app.emit("error", "ID_AND_USERID_MISMATCH", ctx);
-        // }
+        if (id !== ctx.user.id) {
+            return ctx.app.emit("error", "ID_AND_USERID_MISMATCH", ctx);
+        }
         const user = await getUserById(id);
         if (!user) {
             return ctx.app.emit("error", "USER_DOES_NOT_EXISTS", ctx);

@@ -22,11 +22,15 @@ class UserController {
     // 修改用户信息
     async edit(ctx, next) {
         const { id, ...data } = ctx.request.body;
+        // 删除 data 里面的 password、createTime、updateTime
+        delete data.password;
+        delete data.createTime;
+        delete data.updateTime;
         try {
             await updateUserInfo(data, id);
             const user = await getUserById(id);
             delete user.password;
-            ctx.body = responseDataHandle("USER_INFO_UPDATE_SUCCESS", { user, token });
+            ctx.body = responseDataHandle("USER_INFO_UPDATE_SUCCESS", { user });
         } catch (error) {
             ctx.app.emit("error", "USER_INFO_UPDATE_FAIL", ctx);
         }

@@ -17,9 +17,10 @@ class UserService {
     }
     // 修改用户信息
     async updateUserInfo(data = {}, id) {
-        const { username = "", avatar = "", nickName = "", introduce = "", birthday = "2020-01-01" } = data;
-        const statement = "UPDATE bs_users SET username=?,avatar=?,nickName=?,introduce=?,birthday=? WHERE id=?;";
-        await connection.query(statement, [username, avatar, nickName, introduce, birthday, id]);
+        // const { username = "", avatar = "", nickName = "", introduce = "", birthday = "2020-01-01" } = data;
+        // const statement = "UPDATE bs_users SET username=?,avatar=?,nickName=?,introduce=?,birthday=? WHERE id=?;";
+        const statement = "UPDATE bs_users SET ? WHERE id=?;";
+        await connection.query(statement, [data, id]);
     }
     // 修改用户密码
     async updateUserPassword(id, password) {
