@@ -31,6 +31,11 @@ class ClassIfyService {
         const statement = "UPDATE bs_classify SET title = ?, direction = ?, icon = ? WHERE id = ?;";
         await connection.execute(statement, [title, direction, icon, id]);
     }
+    // 删除分类
+    async del(id, uid) {
+        const statement = "DELETE FROM bs_classify WHERE id = ? && uid = ?;";
+        await connection.execute(statement, [id, uid]);
+    }
 }
 
 module.exports = new ClassIfyService();

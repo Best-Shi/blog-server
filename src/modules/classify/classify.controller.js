@@ -39,6 +39,22 @@ class ClassifyController {
             ctx.app.emit("error", "UPDATE_FAIL", ctx);
         }
     }
+    // 删除分类
+    async del(ctx, next) {
+        const uid = ctx.user.id;
+        const { id } = ctx.params;
+        try {
+            const clissify = await service.classifyById(id, uid);
+            if (clissify) {
+                await service.del(id, uid);
+                ctx.body = responseDataHandle("DEL_SUCCESS");
+            } else {
+                ctx.app.emit("error", "DEL_FAIL", ctx);
+            }
+        } catch (err) {
+            ctx.app.emit("error", "DEL_FAIL", ctx);
+        }
+    }
 }
 
 module.exports = new ClassifyController();
