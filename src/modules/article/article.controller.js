@@ -1,5 +1,5 @@
 const responseDataHandle = require("../../utils/response.data.handle");
-const { create, getArticleById, edit, detail } = require("./article.service");
+const { create, getArticleById, edit, detail, del } = require("./article.service");
 
 class ArticleController {
     // 创建文章
@@ -41,15 +41,25 @@ class ArticleController {
 
     // 查看文章详情
     async detail(ctx, next) {
-        const id = ctx.request.body;
+        const { id } = ctx.request.body;
         const uid = ctx.user.id;
         try {
             const article = await detail(id, uid);
             delete article.isDel;
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { ...article });
         } catch (err) {
-            console.log(err);
             return ctx.app.emit("error", "REQUEST_FAIL", ctx);
+        }
+    }
+
+    // 删除文章
+    async del(ctx, next) {
+        const { id } = ctx.request.body;
+        try {
+            await del(id);
+            ctx.body = responseDataHandle("DEL_SUCCESS");
+        } catch (err) {
+            return ctx.app.emit("error", "DEL_FAIL", ctx);
         }
     }
 }

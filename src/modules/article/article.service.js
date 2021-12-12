@@ -27,6 +27,12 @@ class ArticleService {
         const result = await connection.query(statement, [id, uid]);
         return result[0][0];
     }
+
+    // 删除文章
+    async del(id) {
+        const statement = "UPDATE bs_article SET isDel = 1 WHERE id = ?;";
+        await connection.execute(statement, [id]);
+    }
 }
 
 module.exports = new ArticleService();
