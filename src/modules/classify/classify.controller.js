@@ -9,7 +9,18 @@ class ClassifyController {
             const data = await service.list(uid);
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { list: data });
         } catch (err) {
-            console.log(err);
+            ctx.app.emit("error", "REQUEST_FAIL", ctx);
+        }
+    }
+    // 新增分类
+    async create(ctx, next) {
+        const uid = ctx.user.id;
+        const data = ctx.request.body;
+        try {
+            await service.create(uid, data);
+            ctx.body = responseDataHandle("CREATE_SUCCESS");
+        } catch (err) {
+            ctx.app.emit("error", "CREATE_FAIL", ctx);
         }
     }
 }
