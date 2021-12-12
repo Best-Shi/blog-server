@@ -12,6 +12,6 @@ const router = new Router({
 router.post("/", verifyAuth, classifyList);
 router.post("/create", verifyAuth, create);
 router.post("/edit", verifyAuth, verifyExist, edit);
-router.post("/del", verifyAuth, verifyExist, del);
+router.post("/del", verifyAuth, del);
 
 module.exports = router;
