@@ -33,6 +33,29 @@ class ArticleService {
         const statement = "UPDATE bs_article SET isDel = 1 WHERE id = ?;";
         await connection.execute(statement, [id]);
     }
+
+    // 文章列表
+    async articleList(uid, current, size, filterText) {
+        let statement = "";
+        let result = [[]];
+        if (filterText) {
+            statement = "SELECT * FROM bs_article WHERE title LIKE '%?%' && uid = ? && isDel = 0 ORDER BY id DESC LIMIT ?, ?;";
+            result = await connection.execute(statement, [filterText, uid, current, size]);
+        } else {
+            statement = "SELECT * FROM bs_article WHERE uid = ? && isDel = 0 ORDER BY id DESC LIMIT ?, ?;";
+            result = await connection.execute(statement, [uid, current, size]);
+        }
+
+        return result[0];
+    }
+
+    // 获取总条数
+    async articleCount(uid) {
+        const statement = "SELECT COUNT(*) count FROM bs_article WHERE uid = ? && isDel = 0;";
+        const result = await connection.execute(statement, [uid]);
+        const { count } = result[0][0];
+        return count;
+    }
 }
 
 module.exports = new ArticleService();
