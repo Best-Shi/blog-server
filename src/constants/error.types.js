@@ -59,6 +59,10 @@ const errorTypes = {
         code: 400,
         message: "删除失败",
     },
+    ARTICLE_DOES_NOT_EXISTS: {
+        code: 400,
+        message: "文章不存在",
+    },
 };
 
 module.exports = errorTypes;
