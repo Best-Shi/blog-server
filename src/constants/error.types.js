@@ -63,6 +63,10 @@ const errorTypes = {
         code: 400,
         message: "文章不存在",
     },
+    REQUEST_FAIL: {
+        code: 400,
+        message: "请求失败",
+    },
 };
 
 module.exports = errorTypes;

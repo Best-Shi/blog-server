@@ -1,5 +1,5 @@
 const responseDataHandle = require("../../utils/response.data.handle");
-const { create, getArticleById, edit } = require("./article.service");
+const { create, getArticleById, edit, detail } = require("./article.service");
 
 class ArticleController {
     // 创建文章
@@ -25,7 +25,7 @@ class ArticleController {
             return ctx.app.emit("error", "ID_IS_REQUIRED", ctx);
         } else {
             const article = await getArticleById(id);
-            if (!article || article.uid !== ctx.user.id) {
+            if (!article || (article.uid !== ctx.user.id && article.isDel === 0)) {
                 return ctx.app.emit("error", "ARTICLE_DOES_NOT_EXISTS", ctx);
             }
         }
@@ -35,8 +35,21 @@ class ArticleController {
             await edit(data, id);
             ctx.body = responseDataHandle("UPDATE_SUCCESS");
         } catch (err) {
-            console.log(err);
             return ctx.app.emit("error", "UPDATE_FAIL", ctx);
+        }
+    }
+
+    // 查看文章详情
+    async detail(ctx, next) {
+        const id = ctx.request.body;
+        const uid = ctx.user.id;
+        try {
+            const article = await detail(id, uid);
+            delete article.isDel;
+            ctx.body = responseDataHandle("REQUEST_SUCCESS", { ...article });
+        } catch (err) {
+            console.log(err);
+            return ctx.app.emit("error", "REQUEST_FAIL", ctx);
         }
     }
 }
