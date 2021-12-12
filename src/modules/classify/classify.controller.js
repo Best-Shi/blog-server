@@ -23,6 +23,22 @@ class ClassifyController {
             ctx.app.emit("error", "CREATE_FAIL", ctx);
         }
     }
+    // 修改分类
+    async update(ctx, next) {
+        const uid = ctx.user.id;
+        const { id, ...data } = ctx.request.body;
+        try {
+            const clissify = await service.classifyById(id, uid);
+            if (clissify) {
+                await service.update(id, data);
+                ctx.body = responseDataHandle("UPDATE_SUCCESS");
+            } else {
+                ctx.app.emit("error", "UPDATE_FAIL", ctx);
+            }
+        } catch (err) {
+            ctx.app.emit("error", "UPDATE_FAIL", ctx);
+        }
+    }
 }
 
 module.exports = new ClassifyController();
