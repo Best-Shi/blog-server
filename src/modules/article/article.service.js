@@ -2,22 +2,27 @@ const connection = require("../../app/database");
 
 class ArticleService {
     // 通过 id 获取文章
-    async getArticleById(id) {
-        const statement = "SELECT * FROM bs_article WHERE id = ?;";
-        const result = await connection.execute(statement, [id]);
+    async getArticleById(id, uid) {
+        const statement = "SELECT * FROM bs_article WHERE id = ? && uid = ? && isDel = 0;";
+        const result = await connection.execute(statement, [id, uid]);
         return result[0][0];
     }
 
     // 创建文章
-    async create({ title = "", direction = "", content = "", cover = "", uid = "" }) {
-        const statement = "INSERT INTO bs_article (title,direction,content,cover,uid) VALUES(?, ?, ?, ?, ?);";
-        await connection.execute(statement, [title, direction, content, cover, uid]);
+    async create(uid, { title = "", direction = "", content = "", cover = "", classifyId: cid = "" }) {
+        const statement = "INSERT INTO bs_article (title, direction, content ,cover, cid, uid) VALUES(?, ?, ?, ?, ?, ?);";
+        await connection.execute(statement, [title, direction, content, cover, cid, uid]);
     }
 
     // 修改文章
-    async edit(data, id) {
-        const statement = "UPDATE bs_article SET ? WHERE id = ?;";
-        await connection.query(statement, [data, id]);
+    async edit(id, uid, { title = "", direction = "", content = "", cover = "", classifyId: cid = "" }) {
+        if (cid) {
+            const statement = "UPDATE bs_article SET title = ?, direction = ?, content = ?, cover = ?, cid = ? WHERE id = ? && uid = ? && isDel = 0;";
+            await connection.execute(statement, [title, direction, content, cover, cid, id, uid]);
+        } else {
+            const statement = "UPDATE bs_article SET title = ?, direction = ?, content = ?, cover = ? WHERE id = ? && uid = ? && isDel = 0;";
+            await connection.execute(statement, [title, direction, content, cover, id, uid]);
+        }
     }
 
     // 查看文章详情
@@ -29,12 +34,13 @@ class ArticleService {
     }
 
     // 删除文章
-    async del(id) {
-        const statement = "UPDATE bs_article SET isDel = 1 WHERE id = ?;";
-        await connection.execute(statement, [id]);
+    async del(id, uid) {
+        const statement = "UPDATE bs_article SET isDel = 1 WHERE id = ? && uid = ?;";
+        await connection.execute(statement, [id, uid]);
     }
 
     // 文章列表
+    // TODO: 需要查询与文章关联的所有信息
     async articleList(uid, current, size, filterText) {
         let statement = "";
         let result = [[]];
