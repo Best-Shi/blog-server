@@ -18,14 +18,14 @@ class ArticleController {
                     service.articleRelLabel(result.insertId, item);
                 });
             }
-            ctx.body = responseDataHandle("CREATE_SUCCESS");
+            ctx.body = responseDataHandle("CREATE_SUCCESS", { id: result.insertId });
         } catch (err) {
             return ctx.app.emit("error", "CREATE_FAIL", ctx);
         }
     }
     // 修改文章
     async edit(ctx, next) {
-        const { id, ...data } = ctx.request.body;
+        const { id, labels, ...data } = ctx.request.body;
         const uid = ctx.user.id;
         // 校验是否有要修改的内容
         if (Object.keys(data).length < 1) {
@@ -48,21 +48,39 @@ class ArticleController {
         // 修改文章
         try {
             await service.edit(id, uid, data);
+            // 若果有标签字段，先删除原有标签关联关系，再关联标签
+            if (labels && Array.isArray(labels)) {
+                await service.delArticleLabel(id);
+                if (labels.length > 0) {
+                    labels.forEach((item) => {
+                        service.articleRelLabel(id, item);
+                    });
+                }
+            }
             ctx.body = responseDataHandle("UPDATE_SUCCESS");
         } catch (err) {
+            console.log(err);
             return ctx.app.emit("error", "UPDATE_FAIL", ctx);
         }
     }
 
     // 查看文章详情
-    // TODO: 需要补充分类标签信息
     async detail(ctx, next) {
-        const { id } = ctx.request.body;
+        const { id } = ctx.params;
         const uid = ctx.user.id;
         try {
             const article = await service.detail(id, uid);
+            if (article.labels.length === 1 && !article.labels[0].id) {
+                article.labels = [];
+            } else {
+                article.labels = article.labels.map((item) => {
+                    item.style = JSON.parse(item.style);
+                    return item;
+                });
+            }
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { ...article });
         } catch (err) {
+            console.log(err);
             return ctx.app.emit("error", "REQUEST_FAIL", ctx);
         }
     }

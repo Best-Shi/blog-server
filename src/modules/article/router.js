@@ -9,7 +9,7 @@ const router = new Router({
 
 router.post("/create", verifyAuth, create);
 router.post("/edit", verifyAuth, edit);
-router.post("/detail", verifyAuth, detail);
+router.post("/detail/:id", verifyAuth, detail);
 router.post("/del", verifyAuth, del);
 router.post("/", verifyAuth, list);
 

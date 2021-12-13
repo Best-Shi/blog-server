@@ -9,7 +9,14 @@ class ClassIfyService {
     }
     // 分类数据
     async list(uid) {
-        const statement = "SELECT id, title, direction, icon, pid, createTime, updateTime FROM bs_classify WHERE uid = ?;";
+        const statement = `
+        SELECT 
+            id, title, direction, icon, pid,
+            DATE_FORMAT(createTime,'%Y-%m-%d %H:%i:%s') createTime,
+            DATE_FORMAT(updateTime,'%Y-%m-%d %H:%i:%s') updateTime 
+        FROM bs_classify 
+        WHERE uid = ?;
+        `;
         const result = await connection.execute(statement, [uid]);
         return result[0];
     }

@@ -37,11 +37,36 @@ class ArticleService {
         const statement = "INSERT INTO bs_article_label (aid, lid) VALUES (?, ?);";
         await connection.execute(statement, [articleId, labelId]);
     }
+    // 删除文章与标签关联关系
+    async delArticleLabel(articleId) {
+        const statement = "DELETE FROM bs_article_label WHERE aid = ?;";
+        await connection.execute(statement, [articleId]);
+    }
 
     // 查看文章详情
     async detail(id, uid) {
-        // TODO: 需要查询与文章关联的所有信息
-        const statement = "SELECT * FROM bs_article WHERE id = ? && uid = ? && isDel = 0;";
+        const statement = `
+        SELECT 
+            bsa.id id, bsa.title title, bsa.content content, bsa.direction direction, bsa.cover cover, 
+            DATE_FORMAT(bsa.createTime,'%Y-%m-%d %H:%i:%s') createTime,
+            DATE_FORMAT(bsa.updateTime,'%Y-%m-%d %H:%i:%s') updateTime, 
+            JSON_ARRAYAGG(JSON_OBJECT(
+                'id', bsl.id, 'label', bsl.label, 'direction', bsl.direction, 'icon', bsl.icon, 'style', bsl.style,
+                'createTime', DATE_FORMAT(bsl.createTime,'%Y-%m-%d %H:%i:%s'), 
+                'updateTime', DATE_FORMAT(bsl.updateTime,'%Y-%m-%d %H:%i:%s')
+            )) labels,
+            JSON_OBJECT(
+                'id',bsc.id, 'title',bsc.title, 'direction', bsc.direction, 'pid', bsc.pid, 
+                'createTime', DATE_FORMAT(bsc.createTime,'%Y-%m-%d %H:%i:%s'), 
+                'updateTime', DATE_FORMAT(bsc.updateTime,'%Y-%m-%d %H:%i:%s')
+            ) classify
+        FROM bs_article bsa
+        LEFT JOIN bs_article_label bsal ON bsal.aid = bsa.id
+        LEFT JOIN bs_label bsl ON bsal.lid = bsl.id
+        LEFT JOIN bs_classify bsc ON bsa.cid = bsc.id
+        WHERE bsa.id = ? && bsa.uid = ? && isDel = 0
+        GROUP BY id;
+        `;
         const result = await connection.query(statement, [id, uid]);
         return result[0][0];
     }
