@@ -7,11 +7,20 @@ class ArticleController {
     async create(ctx, next) {
         const data = ctx.request.body;
         const uid = ctx.user.id;
+        const labels = data.labels;
+
+        // 新增文章
         try {
-            await service.create(uid, data);
+            const result = await service.create(uid, data);
+            // 文章与标签关联
+            if (labels && Array.isArray(labels) && labels.length > 0 && result.insertId) {
+                labels.forEach((item) => {
+                    service.articleRelLabel(result.insertId, item);
+                });
+            }
             ctx.body = responseDataHandle("CREATE_SUCCESS");
         } catch (err) {
-            ctx.app.emit("error", "CREATE_FAIL", ctx);
+            return ctx.app.emit("error", "CREATE_FAIL", ctx);
         }
     }
     // 修改文章
