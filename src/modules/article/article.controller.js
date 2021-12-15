@@ -70,17 +70,16 @@ class ArticleController {
         const uid = ctx.user.id;
         try {
             const article = await service.detail(id, uid);
-            if (article.labels.length === 1 && !article.labels[0].id) {
-                article.labels = [];
-            } else {
+            if (article.labels) {
                 article.labels = article.labels.map((item) => {
-                    item.style = JSON.parse(item.style);
+                    if (item.style) {
+                        item.style = JSON.parse(item.style);
+                    }
                     return item;
                 });
             }
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { ...article });
         } catch (err) {
-            console.log(err);
             return ctx.app.emit("error", "REQUEST_FAIL", ctx);
         }
     }

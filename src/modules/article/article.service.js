@@ -50,11 +50,13 @@ class ArticleService {
             bsa.id id, bsa.title title, bsa.content content, bsa.direction direction, bsa.cover cover, 
             DATE_FORMAT(bsa.createTime,'%Y-%m-%d %H:%i:%s') createTime,
             DATE_FORMAT(bsa.updateTime,'%Y-%m-%d %H:%i:%s') updateTime, 
-            JSON_ARRAYAGG(JSON_OBJECT(
-                'id', bsl.id, 'label', bsl.label, 'direction', bsl.direction, 'icon', bsl.icon, 'style', bsl.style,
-                'createTime', DATE_FORMAT(bsl.createTime,'%Y-%m-%d %H:%i:%s'), 
-                'updateTime', DATE_FORMAT(bsl.updateTime,'%Y-%m-%d %H:%i:%s')
-            )) labels,
+            IF(COUNT(bsl.id), JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'id', bsl.id, 'label', bsl.label, 'direction', bsl.direction, 'icon', bsl.icon, 'style', bsl.style,
+                    'createTime', DATE_FORMAT(bsl.createTime,'%Y-%m-%d %H:%i:%s'), 
+                    'updateTime', DATE_FORMAT(bsl.updateTime,'%Y-%m-%d %H:%i:%s')
+                )
+            ), NULL) labels,
             JSON_OBJECT(
                 'id',bsc.id, 'title',bsc.title, 'direction', bsc.direction, 'pid', bsc.pid, 
                 'createTime', DATE_FORMAT(bsc.createTime,'%Y-%m-%d %H:%i:%s'), 
