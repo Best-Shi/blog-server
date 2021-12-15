@@ -1,5 +1,4 @@
 const responseDataHandle = require("../../utils/response.data.handle");
-const { create, getArticleById, edit, detail, del, articleList, articleCount } = require("./article.service");
 const service = require("./article.service");
 
 class ArticleController {
@@ -106,7 +105,7 @@ class ArticleController {
         const current = (parseInt(currentpage) - 1) * size;
 
         try {
-            let list = await articleList(uid, current, size, filterText);
+            let list = await service.articleList(uid, current, size, filterText);
             if (list.length > 0) {
                 list = list.map((item) => {
                     if (item.labels) {
@@ -120,7 +119,7 @@ class ArticleController {
                     return item;
                 });
             }
-            const count = await articleCount(uid);
+            const count = await service.articleCount(uid);
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { list, currentpage, pagesize, count });
         } catch (err) {
             ctx.app.emit("error", "REQUEST_FAIL", ctx);
