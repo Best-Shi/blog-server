@@ -97,7 +97,6 @@ class ArticleController {
     }
 
     // 文章列表
-    // TODO: 需要补充分类标签信息
     async list(ctx, next) {
         const uid = ctx.user.id;
         const { currentpage = 1, pagesize = 10, filterText = "" } = ctx.request.body;
@@ -107,11 +106,24 @@ class ArticleController {
         const current = (parseInt(currentpage) - 1) * size;
 
         try {
-            const list = await articleList(uid, current, size, filterText);
+            let list = await articleList(uid, current, size, filterText);
+            if (list.length > 0) {
+                list = list.map((item) => {
+                    if (item.labels) {
+                        item.labels = item.labels.map((v) => {
+                            if (v.style) {
+                                v.style = JSON.parse(v.style);
+                            }
+                            return v;
+                        });
+                    }
+                    return item;
+                });
+            }
             const count = await articleCount(uid);
             ctx.body = responseDataHandle("REQUEST_SUCCESS", { list, currentpage, pagesize, count });
         } catch (err) {
-            return ctx.app.emit("error", "EQUEST_FAIL", ctx);
+            ctx.app.emit("error", "REQUEST_FAIL", ctx);
         }
     }
 }
