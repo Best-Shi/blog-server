@@ -88,7 +88,7 @@ class ArticleController {
         const { id } = ctx.request.body;
         const uid = ctx.user.id;
         try {
-            await service.del(id, ui);
+            await service.del(id, uid);
             ctx.body = responseDataHandle("DEL_SUCCESS");
         } catch (err) {
             return ctx.app.emit("error", "DEL_FAIL", ctx);

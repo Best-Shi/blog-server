@@ -48,6 +48,31 @@ class LabelController {
             ctx.app.emit("error", "UPDATE_FAIL", ctx);
         }
     }
+    // 标签详情;
+    async detail(ctx, next) {
+        const uid = ctx.user.id;
+        const { id } = ctx.params;
+        try {
+            const label = await service.getLabelById(id, uid);
+            if (label.style) {
+                label.style = JSON.parse(label.style);
+            }
+            ctx.body = responseDataHandle("REQUEST_SUCCESS", { ...label });
+        } catch (err) {
+            return ctx.app.emit("error", "REQUEST_FAIL", ctx);
+        }
+    }
+    // 删除标签
+    async del(ctx, next) {
+        const uid = ctx.user.id;
+        const { id } = ctx.params;
+        try {
+            await service.del(id, uid);
+            ctx.body = responseDataHandle("DEL_SUCCESS");
+        } catch (err) {
+            return ctx.app.emit("error", "DEL_FAIL", ctx);
+        }
+    }
 }
 
 module.exports = new LabelController();
